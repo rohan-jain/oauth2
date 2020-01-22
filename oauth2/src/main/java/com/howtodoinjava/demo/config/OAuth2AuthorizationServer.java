@@ -12,29 +12,43 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @EnableAuthorizationServer
 public class OAuth2AuthorizationServer extends AuthorizationServerConfigurerAdapter 
 {
+	
+	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	
+	
+	
+	
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		security
 			.tokenKeyAccess("permitAll()")
-			.checkTokenAccess("isAuthenticated()")
-			.allowFormAuthenticationForClients();
+			.checkTokenAccess("isAuthenticated()");
+//			.allowFormAuthenticationForClients();
 	}
-
+	
+	
+	
+	
+	
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients
 			.inMemory()
 			.withClient("clientapp")
 			.secret(passwordEncoder.encode("123456"))
-			.authorizedGrantTypes("password", "authorization_code", "refresh_token")
+			.authorizedGrantTypes("authorization_code")
 			.authorities("READ_ONLY_CLIENT")
-			.scopes("read_profile_info")
+			.scopes("user_info")
 			.resourceIds("oauth2-resource")
-			.redirectUris("http://localhost:8081/login")
+			.redirectUris("http://localhost:8082/ui/login")
 			.accessTokenValiditySeconds(5000)
 			.refreshTokenValiditySeconds(50000);
 	}
+	
+	
+	
+	
 }
